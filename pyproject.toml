@@ -55,6 +55,11 @@ license = { file = 'LICENSE' }
 ci = [
     'nox~=2022.11.21',
 ]
+docs = [
+    'sphinx~=6.1.3',
+    'sphinx-copybutton~=0.5.2',
+    'sphinx-autodoc-typehints~=1.23.0',
+]
 lint = [
     'pylint~=2.15',
 ]

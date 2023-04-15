@@ -40,10 +40,14 @@ SECRET = 'admin-client-auth'
 class AuthException(Exception):
 
     """
-    An exception for authorization problems from the api.Auth object.
+    An exception for authorization problems from the ``api.Auth`` object.
     """
 
     def __init__(self, message) -> None:
+        """
+        Initializes the Exception.
+        :param message: Message to include in the Exception.
+        """
         self.message = message
         super().__init__(self.message)
 
@@ -54,12 +58,15 @@ class Auth:
     Class for handling CSM API credentials stored in Kubernetes secrets.
 
     The initialization of this class passes any provided arguments along to
-    kubernetes.config.load_kube_config, allowing a user to override the config
+    ``kubernetes.config.load_kube_config``, allowing a user to override the config
     location.
     """
 
     def __init__(self, **kwargs) -> None:
+        """
 
+        :param kwargs:
+        """
         config.load_kube_config(**kwargs)
         self.core = client.CoreV1Api()
         self._token = None
@@ -67,7 +74,6 @@ class Auth:
     def _get_secret(self) -> dict:
         """
         Fetches the Kubernetes SECRET for admin authentication.
-        :return: The data dict from the resolved V1Secret.
         """
         try:
             secret = self.core.read_namespaced_secret(SECRET, 'default').data
@@ -81,7 +87,9 @@ class Auth:
 
     def refresh_token(self) -> None:
         """
-        Refreshes the authentication token.
+        Refreshes the authentication token, updating ``Auth.token``.
+
+        :raises AuthException: if the Kubernetes configuration is invalid.
         """
         del self.token
         credentials = self._get_secret()
@@ -107,7 +115,6 @@ class Auth:
     def token(self) -> str:
         """
         The authentication token.
-        :return: The active token.
         """
         return self._token
 
